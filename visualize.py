@@ -20,11 +20,12 @@ def visualize(config, weight_path, data_path):
     dataset = MedicalImageFolder(cfg=config, data_path=data_path)
     test_loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=config.TEST.NUM_WORKERS)
     
-    for i, (_, _, _, img_path) in enumerate(test_loader):
+    for i, img_path_batch in enumerate(test_loader):
         # 处理图像并进行预测
-        img, original_img = medical_image_loader(img_path[0], image_size=config.TEST.IMAGE_SIZE)
+        img_path = img_path_batch[0]  # batch中的第一个路径
+        img, original_img = medical_image_loader(img_path, image_size=config.TEST.IMAGE_SIZE)
         
-        print(f"\n正在处理: {img_path[0]}")
+        print(f"\n正在处理: {img_path}")
         
         # 转换为张量并添加batch维度
         img = torch.from_numpy(img).unsqueeze(0)
@@ -51,7 +52,7 @@ def visualize(config, weight_path, data_path):
         pred_binary[pred_binary < 0.5] = 0
 
         # 按照原始数据结构创建输出目录
-        original_path = img_path[0]
+        original_path = img_path
         
         # 解析路径结构: /path/to/高血压标签/类别/病人文件夹/图像文件
         path_parts = original_path.split(os.sep)
@@ -72,7 +73,7 @@ def visualize(config, weight_path, data_path):
         os.makedirs(patient_output_dir, exist_ok=True)
         
         # 获取文件名（不含扩展名）
-        base_name = os.path.splitext(os.path.basename(img_path[0]))[0]
+        base_name = os.path.splitext(os.path.basename(img_path))[0]
         
         # 保存分割掩码
         pred_save_path = os.path.join(patient_output_dir, f"{base_name}_mask.png")

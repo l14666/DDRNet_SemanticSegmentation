@@ -55,7 +55,7 @@ class MedicalImageFolder(data.Dataset):
     
     def __getitem__(self, index):
         img_path = self.image_paths[index]
-        return None, None, None, img_path
+        return img_path
     
     def __len__(self):
         return len(self.image_paths)
