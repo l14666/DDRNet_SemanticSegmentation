@@ -48,11 +48,11 @@ def read_DRIVE_datasets(root_path, mode):
     masks = []
 
     if(mode.lower() == 'train'):
-      image_root = os.path.join(root_path, 'training/images')
+      image_root = os.path.join(root_path, 'training/images_enhanced')
       gt_root = os.path.join(root_path, 'training/1st_manual')
     
     elif(mode.lower() in ['val', 'test', 'testval']):
-      image_root = os.path.join(root_path, 'test/images')
+      image_root = os.path.join(root_path, 'test/images_enhanced')
       gt_root = os.path.join(root_path, 'test/1st_manual')
 
     for image_name in os.listdir(image_root):
