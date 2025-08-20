@@ -102,7 +102,6 @@ if __name__ == "__main__":
     parser.add_argument('--data',
                         help='path to medical image data directory',
                         default='/mnt/data/lijianfei/高血压标签',
-                        required=True,
                         type=str)                    
     args = parser.parse_args()
     cfg = get_cfg()
