@@ -4,7 +4,7 @@ import torch
 import argparse
 from torch.nn import Sigmoid
 import numpy as np
-from matplotlib import pyplot as plt
+import cv2
 from utils.medical_data_utils import MedicalImageFolder, medical_image_loader
 import os
 
@@ -75,15 +75,12 @@ def visualize(config, weight_path, data_path):
         # 获取文件名（不含扩展名）
         base_name = os.path.splitext(os.path.basename(img_path))[0]
         
-        # 保存分割掩码
+        # 保存分割掩码（保持与模型输出一致的分辨率）
         pred_save_path = os.path.join(patient_output_dir, f"{base_name}_mask.png")
-        plt.figure(figsize=(8, 8))
-        plt.imshow(pred_binary, cmap='gray')
-        plt.axis('off')
-        plt.savefig(pred_save_path, bbox_inches='tight', dpi=150, pad_inches=0, 
-                   facecolor='white', edgecolor='none')
-        plt.close()
+        mask_uint8 = (pred_binary * 255).astype(np.uint8)
+        cv2.imwrite(pred_save_path, mask_uint8)
         
+        print(f"模型输出尺寸: {pred.shape}")
         print(f"分割掩码已保存: {pred_save_path}")
         print(f"预测范围: [{pred.min():.3f}, {pred.max():.3f}]")
         print("-" * 60)
